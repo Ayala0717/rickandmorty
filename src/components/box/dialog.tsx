@@ -26,9 +26,9 @@ function DialogBox({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        {Boolean(trigger) || <Button type='button'>{'Abrir'}</Button>}
+        {trigger || <Button type='button'>{'Abrir'}</Button>}
       </DialogTrigger>
-      <DialogContent className='sm:max-w-md'>
+      <DialogContent className='w-full'>
         <DialogHeader>
           {Boolean(title) && <DialogTitle>{title}</DialogTitle>}
           {Boolean(description) && (
