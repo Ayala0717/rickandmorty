@@ -1,5 +1,4 @@
 {
   "*.{js,ts,jsx,tsx}": "eslint",
-  "*.css": "stylelint",
   "*": "prettier --check"
 }

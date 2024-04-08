@@ -14,7 +14,11 @@ function App() {
 
   const route = useRoutes(routes) || <NotFound />
 
-  return <Suspense fallback={<p>{'Loading'}</p>}>{route}</Suspense>
+  return (
+    <Suspense fallback={<p>{'Loading'}</p>}>
+      <main>{route}</main>
+    </Suspense>
+  )
 }
 
 export default App
