@@ -37,11 +37,11 @@ function Home() {
   return (
     <section>
       {!isEmptyObject(user) && (
-        <h1 className='sticky top-0 z-50 mb-1 bg-black p-10 text-white'>
+        <h1 className='sticky top-0 z-50 bg-black p-10 text-3xl font-bold text-white'>
           {user?.username}
         </h1>
       )}
-      <div className='block h-14 md:h-10'>
+      <div className='sticky top-[7.2rem] z-50 h-14 bg-slate-950/[.2] md:h-16'>
         {Boolean(characters?.info.prev) && (
           <Button
             className='absolute left-10 mt-3'

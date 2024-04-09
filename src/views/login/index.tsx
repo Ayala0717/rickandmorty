@@ -15,7 +15,7 @@ const formSchema = z.object({
     .trim(),
   password: z
     .string()
-    .min(3, { message: 'Logitu mínima de 3 caracteres' })
+    .min(3, { message: 'Logitud mínima de 3 caracteres' })
     .trim()
 })
 

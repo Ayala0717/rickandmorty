@@ -9,7 +9,8 @@ function App() {
   const isAuth = useAppDataStore((state) => state.isAuthenticated)
 
   useEffect(() => {
-    if (!isAuth) navigate('/login', { replace: true })
+    if (isAuth) navigate('/home', { replace: true })
+    else navigate('/login', { replace: true })
   }, [])
 
   const route = useRoutes(routes) || <NotFound />
