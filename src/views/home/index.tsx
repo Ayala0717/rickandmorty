@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import ErrorPage from '../error-page'
 import { CardBox } from '@/components/box/card'
 import { useAppDataStore } from '@/store'
 import { isEmptyObject } from '@/utils/obj'
@@ -8,24 +9,22 @@ import { isEmptyArray } from '@/utils/array'
 import { Button } from '@/components/ui/button'
 import { DialogBox } from '@/components/box/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { SkeletonCard } from '@/components/box/skeleton'
+import { useIndex } from '@/hooks/useApi'
 
 function Home() {
   const [characters, setCharacters] = useState<CharactersModel>()
   const [page, setPage] = useState(1)
   const user = useAppDataStore((state) => state.user)
 
-  useEffect(() => {
-    const fetchCharacters = async () => {
-      try {
-        const response = await getCharacters({ page })
-        setCharacters(response)
-      } catch (error) {
-        throw new Error(String(error))
-      }
-    }
+  const { response, isLoading, hasError } = useIndex({
+    indexResource: getCharacters,
+    params: { page }
+  })
 
-    fetchCharacters()
-  }, [page])
+  useEffect(() => {
+    if (!isLoading) setCharacters(response)
+  }, [isLoading])
 
   const pagination = (url: string) => {
     const urlSplit = url.split('=')
@@ -36,29 +35,34 @@ function Home() {
 
   return (
     <section>
+      {Boolean(hasError) && <ErrorPage />}
+      {Boolean(isLoading) && <SkeletonCard />}
+
       {!isEmptyObject(user) && (
         <h1 className='sticky top-0 z-50 bg-black p-10 text-3xl font-bold text-white'>
           {user?.username}
         </h1>
       )}
-      <div className='sticky top-[7.2rem] z-50 h-14 bg-slate-950/[.2] md:h-16'>
-        {Boolean(characters?.info.prev) && (
-          <Button
-            className='absolute left-10 mt-3'
-            onClick={() => pagination(String(characters?.info.prev))}
-          >
-            {'Anterior'}
-          </Button>
-        )}
-        {Boolean(characters?.info.next) && (
-          <Button
-            className='absolute right-10 mt-3'
-            onClick={() => pagination(String(characters?.info.next))}
-          >
-            {'Siguiente'}
-          </Button>
-        )}
-      </div>
+      {!isEmptyArray(characters?.results) && (
+        <div className='sticky top-[7.2rem] z-50 h-14 bg-slate-950/[.2] md:h-16'>
+          {Boolean(characters?.info.prev) && (
+            <Button
+              className='absolute left-10 mt-3'
+              onClick={() => pagination(String(characters?.info.prev))}
+            >
+              {'Anterior'}
+            </Button>
+          )}
+          {Boolean(characters?.info.next) && (
+            <Button
+              className='absolute right-10 mt-3'
+              onClick={() => pagination(String(characters?.info.next))}
+            >
+              {'Siguiente'}
+            </Button>
+          )}
+        </div>
+      )}
 
       <div className='grid grid-cols-8 gap-5 sm:p-5'>
         {Boolean(characters) &&
