@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { AnyObject } from '@/types/common'
 
 interface IndexModel<T> {
@@ -10,6 +10,7 @@ function useIndex<T>({ indexResource, params }: IndexModel<T>) {
   const [response, setResponse] = useState<T>()
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
+  const prevParams = useRef(params)
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -24,8 +25,15 @@ function useIndex<T>({ indexResource, params }: IndexModel<T>) {
       }
     }
 
+    if (prevParams.current !== params) {
+      setIsLoading(true)
+      fetchApi()
+    }
+
+    prevParams.current = params
+
     fetchApi()
-  }, [])
+  }, [params])
 
   return { response, isLoading, hasError }
 }
